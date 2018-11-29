@@ -1,18 +1,26 @@
 import React from 'react'
+import GameButton from './GameButton'
 
-const GameControls = ({ rock, paper, scissors, playerClick }) => {
-  return <div className="game-controls-container">
-      <div className="icon rock" onClick={playerClick}>
-        <img src={rock.src} height={rock.height} width={rock.width} alt={rock.alt} />
-      </div>
-      <div className="icon paper" onClick={playerClick}>
-      <img src={paper.src} height={paper.height} width={paper.width} alt={paper.alt} />
-        
-      </div>
-      <div className="icon scissors" onClick={playerClick}>
-        <img src={scissors.src} height={scissors.height} width={scissors.width} alt={scissors.alt} />
-      </div>
+const GameControls = ({ gameButtons, handleClick }) => {
+  return (
+    <div className="game-controls-container">
+      {gameButtons.map((button, index) => {
+        return (
+          <div key={index} className={button.isActive ? 'active icon pulse' : 'icon'}>
+            <GameButton
+              src={button.src}
+              height={button.height}
+              width={button.width}
+              alt={button.alt}
+              isActive={button.isActive}
+              handleClick={handleClick}
+              id={index}
+            />
+          </div>
+        )
+      })}
     </div>
+  )
 }
 
 export default GameControls
