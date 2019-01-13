@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Navbar from './Components/Navbar'
 import Scoreboard from './Components/Scoreboard'
 import GameControls from './Components/GameControls'
+import whoWins from './HelperFunctions/whoWins'
 
 class App extends Component {
   constructor(props) {
@@ -56,44 +57,13 @@ class App extends Component {
       case 2:
         return 'SCISSORS'
       default:
-        return false
+        return 'ERROR'
     }
   }
 
   aiPicker = () => {
     const options = ['ROCK', 'PAPER', 'SCISSORS']
     return options[Math.floor(Math.random() * Math.floor(3))]
-  }
-
-  whoWins = (player1, player2) => {
-    switch (player1) {
-      case 'ROCK':
-        if (player2 === 'ROCK') {
-          return 'DRAW'
-        } else if (player2 === 'PAPER') {
-          return 'PLAYER_2'
-        } else {
-          return 'PLAYER_1'
-        }
-
-      case 'PAPER':
-        if (player2 === 'ROCK') {
-          return 'PLAYER_1'
-        } else if (player2 === 'PAPER') {
-          return 'DRAW'
-        } else {
-          return 'PLAYER_2'
-        }
-
-      case 'SCISSORS':
-        if (player2 === 'ROCK') {
-          return 'PLAYER_2'
-        } else if (player2 === 'PAPER') {
-          return 'PLAYER_1'
-        } else {
-          return 'DRAW'
-        }
-    }
   }
 
   playerChoice = idToBeSetActive => {
@@ -119,7 +89,7 @@ class App extends Component {
     const { aiChoice, playersChoice } = this.state
     let playerScore = this.state.playerScore
     let compScore = this.state.compScore
-    const gameResult = this.whoWins(playersChoice, aiChoice)
+    const gameResult = whoWins(playersChoice, aiChoice)
     if (gameResult === 'PLAYER_1') {
       playerScore = playerScore + 1
     }
