@@ -41,6 +41,11 @@ header h1 {
   justify-content: center;
 }
 
+.columns {
+  flex-direction: column;
+  text-align: center;
+}
+
 .scoreboard {
   display: flex;
   justify-content: center;
@@ -103,8 +108,13 @@ header h1 {
   transform: scale(1.4);
 }
 
+.button {
+  cursor: pointer;
+}
+
 .icon:hover {
   transform: scale(1.1);
+  cursor: pointer;
 }
 
 .pulse {
@@ -116,7 +126,7 @@ header h1 {
   font-weight: 100;
   margin-top: 4.8rem;
   text-transform: uppercase;
-  
+
   border: 2px solid #fff;
   padding: 1rem 2rem;
 }
@@ -134,14 +144,13 @@ header h1 {
   background: #3f4552;
 }
 
-
 @keyframes pulse {
   0% {
     transform: scale(1.1);
   }
-  
+
   50% {
-    transform: scale(1);    
+    transform: scale(1);
   }
 
   100% {

@@ -35,6 +35,6 @@ export default function whoWins(player1, player2) {
       }
 
     default:
-      return 'ERROR'
+      return ''
   }
 }

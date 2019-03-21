@@ -40,11 +40,9 @@ class App extends Component {
       ],
       playerScore: 0,
       compScore: 0,
-      gameResult: 'Choose wisely young jedi..',
+      gameResult: null,
       playersChoice: false,
       aiChoice: null,
-      requiredClass: null,
-      playButtonVisability: false,
     }
   }
 
@@ -57,7 +55,7 @@ class App extends Component {
       case 2:
         return 'SCISSORS'
       default:
-        return 'ERROR'
+        return ''
     }
   }
 
@@ -66,62 +64,89 @@ class App extends Component {
     return options[Math.floor(Math.random() * Math.floor(3))]
   }
 
-  playerChoice = idToBeSetActive => {
-    const playersChoice = this.rockPaperScissor(idToBeSetActive)
+  playerChoice = id => {
+    const playersChoice = this.rockPaperScissor(id)
     const aiChoice = this.aiPicker()
-    let arrayOfbuttons = this.state.gameButtons
-    arrayOfbuttons.map((button, index) => {
+    let { gameButtons } = this.state
+    gameButtons.map((button, index) => {
       if (button.isActive) {
         button.isActive = false
       }
-      if (index === idToBeSetActive) {
+      if (index === id) {
         button.isActive = !button.isActive
       }
     })
     this.setState({
-      gameButtons: arrayOfbuttons,
+      gameButtons,
       aiChoice,
       playersChoice,
     })
   }
 
+  returnButtonState = () => {
+    const { gameButtons } = this.state
+    gameButtons.map(button => {
+      if (button.isActive) {
+        button.isActive = false
+      }
+    })
+    console.log(gameButtons)
+    this.setState({ gameButtons, playersChoice: false })
+  }
+
   playButton = () => {
-    const { aiChoice, playersChoice } = this.state
-    let playerScore = this.state.playerScore
-    let compScore = this.state.compScore
-    const gameResult = whoWins(playersChoice, aiChoice)
+    let { aiChoice, playersChoice, playerScore, compScore } = this.state
+    let gameResult = whoWins(playersChoice, aiChoice)
     if (gameResult === 'PLAYER_1') {
       playerScore = playerScore + 1
+      gameResult = `Meh! I chose ${aiChoice}, you WIN!!`
     }
     if (gameResult === 'PLAYER_2') {
       compScore = compScore + 1
+      gameResult = `Hurrah! I chose ${aiChoice}, you LOSE!!`
     }
-    this.setState({ gameResult, playerScore, compScore })
+    if (gameResult === 'DRAW') {
+      gameResult = `LOL! I chose ${aiChoice} too, it's a DRAW!!`
+    }
+    this.setState({ gameResult, playerScore, compScore }, () =>
+      this.returnButtonState()
+    )
   }
 
   render() {
+    let {
+      playerScore,
+      compScore,
+      gameResult,
+      playersChoice,
+      gameButtons,
+    } = this.state
     return (
       <div>
         <Navbar />
         <div className="container">
-          <Scoreboard
-            playerScore={this.state.playerScore}
-            compScore={this.state.compScore}
-          />
+          <Scoreboard playerScore={playerScore} compScore={compScore} />
         </div>
-        <div className="container">
-          <p className="game-result">{this.state.gameResult}</p>
+        <div className="container columns">
+          <p className="game-result">{gameResult}</p>
+          <p className="game-result">
+            {playersChoice ? (
+              <p>Go on, make your move!</p>
+            ) : (
+              <p>Choose wisely young jedi..</p>
+            )}
+          </p>
         </div>
         <div className="container">
           <GameControls
-            gameButtons={this.state.gameButtons}
+            gameButtons={gameButtons}
             handleClick={this.playerChoice}
           />
         </div>
         <div
           className={
-            this.state.playersChoice
-              ? 'container statement pulse'
+            playersChoice
+              ? 'container statement pulse button'
               : 'container statement faded'
           }
           onClick={this.playButton}>
